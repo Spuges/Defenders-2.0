@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
 using System;
+using Unity.Mathematics;
 using Random = UnityEngine.Random; // Will switch to mathematics once I get my internet back
 
 namespace Defender
@@ -12,10 +13,13 @@ namespace Defender
     {
         public static WorldGen I { get; private set; }
 
+        public int GetWrapDistance => wrap_distance;
+
         [SerializeField] private int wrap_distance = 512;
-        private float offset;
-        [SerializeField] private int building_layers = 4; // Depth
-        [SerializeField] private int depth_offset = 1;
+        private float2 offset;
+        [SerializeField] private int building_layers = 8; // Depth
+        [SerializeField] private float space_between_depth = 2;
+        [SerializeField,Header("Z pullback, normalised")] private float pullback = 0.5f;
 
         // Make it into a scriptableobject, also add script that contains the dimensions
         [SerializeField] private List<GameObject> buildings = new List<GameObject>();
@@ -72,12 +76,16 @@ namespace Defender
             I = this;
             // Random seed
             Random.InitState(Guid.NewGuid().GetHashCode());
-            
+
             generating = true;
             normalized_progress = 0f;
 
             // Some variable initialisation
-            offset = wrap_distance / 2f;
+            offset = new()
+            {
+                x = wrap_distance / 2f,
+                y = building_layers * space_between_depth * -pullback,
+            };
         }
 
         void Start()
@@ -110,7 +118,7 @@ namespace Defender
                     generating = false;
 
 
-                if (m_timer.ElapsedMilliseconds > 5)
+                if (m_timer.ElapsedMilliseconds > 33)
                 {
                     normalized_progress = Mathf.Min(1f, index / (float)max);
                     total_build_time += m_timer.ElapsedMilliseconds;
@@ -140,8 +148,10 @@ namespace Defender
         {
             int x = index % wrap_distance;
             int z = (index - x) / wrap_distance;
+            int z_variance = (z % 2) * 2;
+            Vector3 position = new Vector3(x - offset.x + z_variance, 0, z * space_between_depth + offset.y);
 
-            Vector3 position = new Vector3(x - offset, 0, z * depth_offset);
+
 
             int building_index = Random.Range(0, buildings.Count);
 
