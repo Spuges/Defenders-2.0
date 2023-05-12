@@ -7,19 +7,34 @@ using System;
 namespace Defender
 {
     // This thing can move.
-    public class Spacecraft : MonoBehaviour, IObservable<float3>, IVelocity
+    public class Spacecraft : MonoBehaviour, IObservable<Spacecraft.MoveData>, IVelocity
     {
         [SerializeField] float2 sensitivity = new(20, 5);
 
         private float2 m_move_vector = float2.zero;
+        private float2 m_last_vector = float2.zero;
+
         private float2 m_velocity = float2.zero;
 
         private Player m_player;
 
+        [SerializeField] private PIDV2 acceleration_pid = new PIDV2(0.035f, 0f, 0f);
+
         float2 IVelocity.velocity => m_velocity;
 
         // For targeting, enemies, missiles etc.
-        private event Action<float3> onCraftMove;
+        private event Action<MoveData> onCraftMove;
+
+        public struct MoveData
+        {
+            public float2 velocity;
+            public float3 position;
+
+            /// <summary>
+            /// Normalised vs acceleration speed, not by normalised vector
+            /// </summary>
+            public float2 normalised_velocity;
+        }
 
         private void Start()
         {
@@ -33,17 +48,18 @@ namespace Defender
 
         private void FixedUpdate()
         {
+            m_last_vector += acceleration_pid.Update(m_move_vector, m_last_vector, Time.fixedDeltaTime);
             PhysicsMove();
         }
 
         private void PhysicsMove()
         {
-            if (math.lengthsq(m_move_vector) <= 0.001f)
+            if (math.lengthsq(m_last_vector) <= 0.001f)
                 return;
 
 
             float2 pos = ((float3)transform.position).xy;
-            float2 projection = m_move_vector * sensitivity * Time.fixedDeltaTime;
+            float2 projection = m_last_vector * sensitivity * Time.fixedDeltaTime;
 
             float2 desired_position = pos + projection;
 
@@ -61,15 +77,20 @@ namespace Defender
             if (0.001f <= math.abs(m_velocity.x))
                 transform.rotation = Quaternion.LookRotation(Vector3.right * m_velocity.x, Vector3.up);
 
-            onCraftMove?.Invoke(transform.position);
+            onCraftMove?.Invoke(new MoveData()
+            {
+                position = transform.position,
+                velocity = m_velocity,
+                normalised_velocity = m_velocity / this.sensitivity,
+            });
         }
 
-        public void Subscribe(Action<float3> callback)
+        public void Subscribe(Action<MoveData> callback)
         {
             onCraftMove += callback;
         }
 
-        public void Unsubscribe(Action<float3> callback)
+        public void Unsubscribe(Action<MoveData> callback)
         {
             onCraftMove -= callback;
         }

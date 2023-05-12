@@ -37,11 +37,11 @@ namespace Defender
 
         private void OnPropGenerated(WorldGen.PropData prop)
         {
-            Debug.Log($"[{gameObject.name}] Chunk pos: {transform.position} ## Prop pos: {prop.obj.transform.position} ## {IsInside(prop.obj.transform.position.x)}");
+            //Debug.Log($"[{gameObject.name}] Chunk pos: {transform.position} ## Prop pos: {prop.obj.transform.position} ## {IsInside(prop.obj.transform.position.x)}");
 
             if(IsInside(prop.obj.transform.position.x))
             {
-                Debug.Log($"Prop generated @ {prop.obj.transform.position} and captured by chunk: {name}");
+                //Debug.Log($"Prop generated @ {prop.obj.transform.position} and captured by chunk: {name}");
                 prop.obj.transform.SetParent(transform, true);
             }
         }

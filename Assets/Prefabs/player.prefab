@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3485246537710461040}
   - component: {fileID: 3485246537710461041}
   - component: {fileID: 3485246537710461043}
+  - component: {fileID: 2077886975}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -50,6 +51,10 @@ MonoBehaviour:
   sensitivity:
     x: 25
     y: 17.5
+  acceleration_pid:
+    pFactor: 0.1
+    iFactor: 0
+    dFactor: 0
 --- !u!114 &3485246537710461041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +82,19 @@ MonoBehaviour:
   max_capacity: 6
   start_abilities:
   - {fileID: 11400000, guid: 4d19a0065f34ec7449762110f65082e4, type: 2}
+--- !u!65 &2077886975
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4368347135532005283}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.35, y: 1.0736246, z: 4.678843}
+  m_Center: {x: 3.8546606e-16, y: 0.036812305, z: 0.52712464}
 --- !u!1 &4689011866815008634
 GameObject:
   m_ObjectHideFlags: 0

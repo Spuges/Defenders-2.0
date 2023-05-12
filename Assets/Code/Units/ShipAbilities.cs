@@ -13,12 +13,9 @@ namespace Defender
 
         List<IShipAbility> abilities; 
         private IActiveAbility selected;
-        private InputAction m_fire;
 
         private void Start()
         {
-            m_fire = Inputs.I.input_values.FindAction("Fire");
-            m_fire.Enable();
 
             abilities = new List<IShipAbility>(start_abilities.Count);
 
@@ -26,15 +23,17 @@ namespace Defender
             selected = (IActiveAbility)abilities.FirstOrDefault(o => o is IActiveAbility);
         }
 
-        private void Update()
+        public void TryAndUse()
         {
-            // Do something fancy
-            bool fire = 0 < m_fire.ReadValue<float>();
-
-            if (fire && selected != null && selected.CanActivate())
+            if(selected != null && selected.CanActivate())
             {
                 selected.Activate();
             }
+        }
+
+        private void Update()
+        {
+            // Do something fancy
         }
     }
 }
