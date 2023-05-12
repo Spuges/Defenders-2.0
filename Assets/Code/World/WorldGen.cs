@@ -9,7 +9,7 @@ using Random = UnityEngine.Random; // Will switch to mathematics once I get my i
 namespace Defender
 {
     [DefaultExecutionOrder(-200)]
-    public class WorldGen : MonoBehaviour, IObservable<WorldGen.Data>
+    public class WorldGen : MonoBehaviour, IObservable<WorldGen.Progress>, IObservable<WorldGen.PropData>
     {
         public static WorldGen I { get; private set; }
 
@@ -20,6 +20,7 @@ namespace Defender
         [SerializeField] private int building_layers = 8; // Depth
         [SerializeField] private float space_between_depth = 2;
         [SerializeField,Header("Z pullback, normalised")] private float pullback = 0.5f;
+        [SerializeField, Range(8, 128)] byte chunks = 4;
 
         // Make it into a scriptableobject, also add script that contains the dimensions
         [SerializeField] private List<GameObject> buildings = new List<GameObject>();
@@ -53,23 +54,21 @@ namespace Defender
         }
         private float m_normalized;
 
-        private event Action<Data> onDataChanged;
+        #region IObservable
+        private event Action<Progress> onDataChanged;
 
-        public struct Data
+        public struct Progress
         {
             public float progress;
             public bool generating;
         }
-
-        public void Subscribe(Action<Data> callback)
+        
+        private event Action<PropData> onPropCreated;
+        public struct PropData
         {
-            onDataChanged += callback;
+            public GameObject obj;
         }
-
-        public void Unsubscribe(Action<Data> callback)
-        {
-            onDataChanged -= callback;
-        }
+        #endregion
 
         private void Awake()
         {
@@ -86,6 +85,7 @@ namespace Defender
                 x = wrap_distance / 2f,
                 y = building_layers * space_between_depth * -pullback,
             };
+            WorldWrapper.I.Initialise(wrap_distance, (byte)chunks);
         }
 
         void Start()
@@ -136,7 +136,7 @@ namespace Defender
 
         private void update_state()
         {
-            Data data = new Data()
+            Progress data = new Progress()
             {
                 progress = normalized_progress,
                 generating = generating,
@@ -151,8 +151,6 @@ namespace Defender
             int z_variance = (z % 2) * 2;
             Vector3 position = new Vector3(x - offset.x + z_variance, 0, z * space_between_depth + offset.y);
 
-
-
             int building_index = Random.Range(0, buildings.Count);
 
             GameObject building = Instantiate(buildings[building_index]);
@@ -160,7 +158,41 @@ namespace Defender
             building.transform.SetParent(transform);
             building.transform.position = position;
 
+            onPropCreated?.Invoke(new PropData()
+            {
+                obj = building
+            });
+
             return index + 4;
+        }
+
+        // UI, build progress.
+        public void Subscribe(Action<Progress> callback)
+        {
+            onDataChanged += callback;
+        }
+
+        public void Unsubscribe(Action<Progress> callback)
+        {
+            onDataChanged -= callback;
+        }
+
+        /// <summary>
+        /// Sub to Prop generated
+        /// </summary>
+        /// <param name="callback"></param>
+        public void Subscribe(Action<PropData> callback)
+        {
+            onPropCreated += callback;
+        }
+
+        /// <summary>
+        /// Unsub from Prop generated
+        /// </summary>
+        /// <param name="callback"></param>
+        public void Unsubscribe(Action<PropData> callback)
+        {
+            onPropCreated -= callback;
         }
     }
 }

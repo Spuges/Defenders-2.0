@@ -16,6 +16,7 @@ namespace Defender
         private Spacecraft m_spacecraft;
 
         // (InputSystem) Doesn't detect my mouse, weird.. Will try to build if it is just an editor bug
+        // AHA! It was the simulator. In game view it works just fine :D
         private InputAction m_move;
 
         private void Awake()

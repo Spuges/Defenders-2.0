@@ -34,7 +34,7 @@ namespace Defender
             WorldGen.I.Unsubscribe(OnWorldGenStateChanged);
         }
 
-        void OnWorldGenStateChanged(WorldGen.Data state)
+        void OnWorldGenStateChanged(WorldGen.Progress state)
         {
             progress_text.text = $"{(state.progress * 100).ToString("0.0")}%";
 

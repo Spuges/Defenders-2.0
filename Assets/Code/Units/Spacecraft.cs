@@ -16,7 +16,7 @@ namespace Defender
 
         private Player m_player;
 
-        public float2 velocity => m_velocity;
+        float2 IVelocity.velocity => m_velocity;
 
         // For targeting, enemies, missiles etc.
         private event Action<float3> onCraftMove;
@@ -54,7 +54,7 @@ namespace Defender
                 desired_position.y = math.clamp(desired_position.y, bounds.x, bounds.y);
             }
 
-            m_velocity = desired_position - pos;
+            m_velocity = (desired_position - pos) / Time.fixedDeltaTime;
             transform.position = new Vector3(desired_position.x, desired_position.y);
 
             // Object orientation towards target direction, only x axis
