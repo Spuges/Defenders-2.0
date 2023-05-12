@@ -24,6 +24,8 @@ namespace Defender
         [Header("World wrapper settings")]
         [SerializeField, Range(8, 128)] byte chunks = 12;
 
+        [SerializeField] private float chunk_plane_depth;
+        [SerializeField] private GameObject chunk_plane_prefab;
         // Make it into a scriptableobject, also add script that contains the dimensions
         [SerializeField] private List<GameObject> buildings = new List<GameObject>();
 
@@ -87,7 +89,14 @@ namespace Defender
                 x = wrap_distance / 2f,
                 y = building_layers * space_between_depth * -pullback,
             };
-            WorldWrapper.I.Initialise(wrap_distance, (byte)chunks);
+
+            WorldWrapper.I.Initialise(new WorldWrapper.Data()
+            {
+                total_width = wrap_distance,
+                divisions = chunks,
+                chunk_plane_prefab = chunk_plane_prefab,
+                chunk_plane_depth = chunk_plane_depth,
+            });
         }
 
         void Start()

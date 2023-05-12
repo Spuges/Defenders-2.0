@@ -27,18 +27,27 @@ namespace Defender
 
         public static bool Copy(this GameObject original, out GameObject copy)
         {
+            copy = default;
+
+            if (original == null)
+                return false;
+
             if(original.transform.Copy(out Transform t))
             {
                 copy = t.gameObject;
                 return true;
             }
 
-            copy = default;
             return false;
         }
 
         public static bool Copy<T>(this Component component, out T obj) where T : Component
         {
+            obj = default;
+
+            if (component == null)
+                return false;
+
             if (component.gameObject.scene.isLoaded)
             {
                 throw new System.Exception($"Trying to get pooled object from non-prefab reference. {component.gameObject.scene.name}");

@@ -7,7 +7,7 @@ using System;
 namespace Defender
 {
     // This thing can move.
-    public class Spacecraft : MonoBehaviour, IObservable<Spacecraft.MoveData>, IVelocity
+    public class Spacecraft : MonoBehaviour, IObservable<Spacecraft.MoveData>, IVelocity, IHealth
     {
         [SerializeField] float2 sensitivity = new(20, 5);
 
@@ -20,7 +20,13 @@ namespace Defender
 
         [SerializeField] private PIDV2 acceleration_pid = new PIDV2(0.035f, 0f, 0f);
 
+        [Header("Stats")]
+        [SerializeField] private float base_max_health = 10f;
+        private float m_health;
+
         float2 IVelocity.velocity => m_velocity;
+
+        float IHealth.Health => m_health;
 
         // For targeting, enemies, missiles etc.
         private event Action<MoveData> onCraftMove;
@@ -38,6 +44,7 @@ namespace Defender
 
         private void Start()
         {
+            m_health = base_max_health;
             m_player = GetComponent<Player>();
         }
 
@@ -93,6 +100,17 @@ namespace Defender
         public void Unsubscribe(Action<MoveData> callback)
         {
             onCraftMove -= callback;
+        }
+
+        public void Damage(Damage source, float damage)
+        {
+            m_health -= damage;
+
+            if(m_health <= 0f)
+            {
+                Debug.LogError($"I should be dead.. {gameObject.name}");
+                gameObject.SetActive(false); // Something something on death.
+            }
         }
     }
 }

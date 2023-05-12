@@ -15,6 +15,7 @@ namespace Defender
         [SerializeField] GameObject projectile = default;
         [SerializeField] float3 spawn_offset;
         [SerializeField] float life_time = 10f; // Die and go to pool.
+        [SerializeField] bool inherit_velocity = true;
 
         private Collider m_collider;
         private IVelocity m_velocity;
@@ -54,28 +55,31 @@ namespace Defender
 
             float3 offset = spawn_offset;
 
-
             GameObject new_projectile;
 
             if (!projectile.Copy(out new_projectile))
                 Debug.LogError($"Ro-ou, no projectile prefab");
 
-
-            // Get the velocity and add it to the projectile
-            if (m_velocity != null)
-            {
-                float3 dir = math.normalize(new float3(m_transform.forward.x, 0, 0));
-                offset *= dir;
-                float3 projectile_velocity = dir * start_velocity;
-                projectile_velocity.x += m_velocity.velocity.x;
-
-                Rigidbody rigid = new_projectile.GetComponent<Rigidbody>();
-                rigid.velocity = projectile_velocity;
-            }    
-
-            if(m_collider != null) // Ignore origin
-                Physics.IgnoreCollision(m_collider, new_projectile.GetComponent<Collider>());
+            // Initial position
             new_projectile.transform.position = (float3)m_transform.position + offset;
+
+            // Add projectile start velocity
+            float3 dir = math.normalize(new float3(m_transform.forward.x, 0, 0));
+            offset *= dir;
+            float3 projectile_velocity = dir * start_velocity;
+
+            Rigidbody rigid = new_projectile.GetComponent<Rigidbody>();
+            rigid.velocity = projectile_velocity;
+
+            // Add inherited velocity
+            if (m_velocity != null && inherit_velocity)
+            {
+                rigid.velocity += new Vector3(m_velocity.velocity.x, 0, 0);
+            }
+
+            // Ignore origin - collision
+            if (m_collider != null)
+                Physics.IgnoreCollision(m_collider, new_projectile.GetComponent<Collider>());
 
             // TODO
             // Get lifetime component of projectile and set the duration

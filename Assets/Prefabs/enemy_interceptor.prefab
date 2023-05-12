@@ -72,6 +72,11 @@ MonoBehaviour:
   sensitivity:
     x: 20
     y: 5
+  acceleration_pid:
+    pFactor: 0.035
+    iFactor: 0
+    dFactor: 0
+  base_max_health: 4
 --- !u!114 &7765863080781848177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_capacity: 1
   start_abilities:
-  - {fileID: 11400000, guid: 4d19a0065f34ec7449762110f65082e4, type: 2}
+  - {fileID: 11400000, guid: f1eb8284b81f2714abcfb8d415dee8ba, type: 2}
 --- !u!135 &3588939875497004646
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -98,7 +103,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1.63
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4434529345733306603
 GameObject:

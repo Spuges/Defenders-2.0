@@ -25,22 +25,39 @@ namespace Defender
         }
         private static WorldWrapper instance;
 
-        public float chunk_width { get; private set; }
+        public Data m_data { get; private set; }
 
-        public void Initialise(float total_width, byte divisions)
+        public struct Data
         {
-            Debug.Assert(1 <= divisions);
+            public float total_width;
+            public byte divisions;
+            public float chunk_plane_depth;
+            public GameObject chunk_plane_prefab;
+        }
 
-            float chunk_width = total_width / divisions;
+        public void Initialise(Data data)
+        {
+            m_data = data;
+            Debug.Assert(1 <= m_data.divisions);
+
+            float chunk_width = m_data.total_width / m_data.divisions;
             float half = chunk_width / 2f;
             Debug.Log($"Chunk size: {chunk_width}");
 
-            for(int d = 0; d < divisions; d++)
+            for(int d = 0; d < m_data.divisions; d++)
             {
                 WorldChunk chunk = new GameObject($"Chunk [{d}]").AddComponent<WorldChunk>();
 
                 chunk.transform.SetParent(transform, false);
                 chunk.transform.position = new Vector3(d * chunk_width - WorldGen.offset.x + half, 0f, 0f);
+
+                // Create plane, so the skybox doesn't leak inbetween buildings.
+                if(data.chunk_plane_prefab.Copy(out GameObject copy))
+                {
+                    copy.transform.SetParent(chunk.transform, false);
+                    copy.transform.localPosition = float3.zero;
+                    copy.transform.localScale = new float3(chunk_width, 1f, copy.transform.localScale.z);
+                }
 
                 // Could make the chunk data static, but in order to keep them reusable I'll leave as is.
                 chunk.Initialise(new WorldChunk.Data()
