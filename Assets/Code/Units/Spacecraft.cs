@@ -42,10 +42,29 @@ namespace Defender
             public float2 normalised_velocity;
         }
 
-        private void Start()
+        public struct Death
+        {
+            public Spacecraft space_craft;
+        }
+
+        public struct Spawn
+        {
+            public Spacecraft space_craft;
+        }
+
+        private void OnEnable()
+        {
+            Start();
+        }
+
+        private void Awake()
+        {
+            m_player = GetComponent<Player>();
+        }
+
+        private void Start() // Reset and initialise here.
         {
             m_health = base_max_health;
-            m_player = GetComponent<Player>();
         }
 
         public void SetMoveVector(float2 vector)
@@ -63,7 +82,6 @@ namespace Defender
         {
             if (math.lengthsq(m_last_vector) <= 0.001f)
                 return;
-
 
             float2 pos = ((float3)transform.position).xy;
             float2 projection = m_last_vector * sensitivity * Time.fixedDeltaTime;
@@ -108,7 +126,7 @@ namespace Defender
 
             if(m_health <= 0f)
             {
-                Debug.LogError($"I should be dead.. {gameObject.name}");
+                GameManager.Death(new Death() { space_craft = this });
                 gameObject.SetActive(false); // Something something on death.
             }
         }

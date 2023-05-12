@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: InterceptorGun
   m_EditorClassIdentifier: 
   start_velocity: 75
-  cooldown: 0.1
-  damage: 2
-  projectile: {fileID: 4732305608809417262, guid: 4b69ecc8a3b4ca34b92c7878b4248ed4, type: 3}
+  cooldown: 0.3
+  damage: 1
+  projectile: {fileID: -58755978718813358, guid: 4b69ecc8a3b4ca34b92c7878b4248ed4, type: 3}
   spawn_offset:
     x: 2.22
     y: -0.48

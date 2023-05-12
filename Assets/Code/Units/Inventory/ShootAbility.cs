@@ -12,7 +12,7 @@ namespace Defender
         [SerializeField] float start_velocity = 50f;
         [SerializeField] float cooldown = default;
         [SerializeField] float damage = default;
-        [SerializeField] GameObject projectile = default;
+        [SerializeField] Damage projectile = default;
         [SerializeField] float3 spawn_offset;
         [SerializeField] float life_time = 10f; // Die and go to pool.
         [SerializeField] bool inherit_velocity = true;
@@ -55,10 +55,17 @@ namespace Defender
 
             float3 offset = spawn_offset;
 
-            GameObject new_projectile;
+            GameObject new_projectile = default;
 
-            if (!projectile.Copy(out new_projectile))
+            if (projectile.Copy(out Damage dmg))
+            {
+                dmg.amount = damage; // Override the old damage
+                new_projectile = dmg.gameObject;
+            }
+            else
+            {
                 Debug.LogError($"Ro-ou, no projectile prefab");
+            }
 
             // Initial position
             new_projectile.transform.position = (float3)m_transform.position + offset;

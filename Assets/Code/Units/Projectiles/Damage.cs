@@ -7,27 +7,37 @@ namespace Defender
 {
     public class Damage : MonoBehaviour
     {
-        [SerializeField] float amount;
-        [SerializeField] GameObject spawn_on_death;
+        public float amount;
+        [SerializeField] List<GameObject> spawn_on_damage;
+
+        private bool is_projectile = true;
+
+        private void Awake()
+        {
+            is_projectile = GetComponent<IHealth>() == null;
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
             // Apply damage if applicable
             IHealth health = collision.gameObject.GetComponent<IHealth>();
+
             if (health != null)
             {
                 health.Damage(this, amount);
             }
 
-            if(spawn_on_death.Copy(out GameObject copy))
+            foreach(GameObject spawn in spawn_on_damage)
             {
-                copy.transform.position = collision.contacts[0].point;
-                Debug.Log($"Spawn on death spawned something: {gameObject.name}");
+                if (spawn.Copy(out GameObject copy))
+                {
+                    copy.transform.position = collision.contacts[0].point;
+                    //Debug.Log($"Spawn on death spawned something: {gameObject.name}");
+                }
             }
-            else
-            {
-                Debug.Log($"Spawn on death was null for damage component: {gameObject.name}");
-            }
+
+            if (!is_projectile)
+                return;
 
             gameObject.SetActive(false);
         }

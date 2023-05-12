@@ -36,11 +36,16 @@ namespace Defender
 
         void SetFollowTarget(Spacecraft.MoveData data)
         {
-            velocity_offset = data.normalised_velocity.x * new float2(1, 0) * left_bound_velocity_offset;
+            // Not good, it is better to check forward direction
+            //velocity_offset = data.normalised_velocity.x * new float2(1, 0) * left_bound_velocity_offset;
+            
+            velocity_offset = Player.I.transform.forward.x * new float2(1, 0) * left_bound_velocity_offset;
+
             target_last_pos = data.position + new float3(velocity_offset, 0);
             SetSkyboxRotation();
         }
 
+        // Since we're moving the player in physics, the camera needs to move too. Otherwise there will be yittering.
         private void FixedUpdate()
         {
             if (!Mathf.Approximately(transform.position.x, target_last_pos.x))
