@@ -24,9 +24,7 @@ namespace Defender
 
         private void Start()
         {
-            transform.position = new Vector3(Player.I.transform.position.x, 0f, 0f) + camera_offset;
-            float rotation = (transform.position.x / (WorldGen.I.GetWrapDistance / 360f) % 360f);
-            skybox_material.SetFloat("_Rotation", rotation);
+            SetSkyboxRotation();
         }
 
         private void LateUpdate()
@@ -44,10 +42,15 @@ namespace Defender
             if (Mathf.Approximately(Player.I.transform.position.x, target_last_pos.x))
                 return;
 
-            transform.position = new Vector3(Player.I.transform.position.x, 0f, 0f) + camera_offset;
-            float rotation = (transform.position.x / (WorldGen.I.GetWrapDistance / 360f) % 360f);
-            skybox_material.SetFloat("_Rotation", rotation);
+            SetSkyboxRotation();
             target_last_pos = Player.I.transform.position;
+        }
+
+        private void SetSkyboxRotation()
+        {
+            transform.position = new Vector3(Player.I.transform.position.x, 0f, 0f) + camera_offset;
+            float rotation = (transform.position.x / (WorldGen.WrapDistance() / 360f) % 360f);
+            skybox_material.SetFloat("_Rotation", rotation);
         }
 
         void SetCameraOffset()

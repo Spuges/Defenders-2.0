@@ -13,14 +13,16 @@ namespace Defender
     {
         public static WorldGen I { get; private set; }
 
-        public int GetWrapDistance => wrap_distance;
+        public static int WrapDistance() => I.wrap_distance;
+        public static float2 offset { get; private set; }
 
         [SerializeField] private int wrap_distance = 512;
-        private float2 offset;
         [SerializeField] private int building_layers = 8; // Depth
         [SerializeField] private float space_between_depth = 2;
         [SerializeField,Header("Z pullback, normalised")] private float pullback = 0.5f;
-        [SerializeField, Range(8, 128)] byte chunks = 4;
+
+        [Header("World wrapper settings")]
+        [SerializeField, Range(8, 128)] byte chunks = 12;
 
         // Make it into a scriptableobject, also add script that contains the dimensions
         [SerializeField] private List<GameObject> buildings = new List<GameObject>();
