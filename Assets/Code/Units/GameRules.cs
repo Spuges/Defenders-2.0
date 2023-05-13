@@ -5,6 +5,7 @@ using Unity.Mathematics;
 
 namespace Defender
 {
+    [DefaultExecutionOrder(-100)]
     public class GameRules : MonoBehaviour
     {
         public static GameRules I { get; private set; }

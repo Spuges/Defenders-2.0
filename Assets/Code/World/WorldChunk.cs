@@ -51,14 +51,9 @@ namespace Defender
             if (!Player.I || !Player.I.gameObject.activeInHierarchy)
                 return;
 
-            float distance = transform.position.x - Player.I.transform.position.x;
-            
-            if(WorldGen.offset.x < math.abs(distance))
+            if(WorldWrapper.IsOutOfBounds(transform.position, out float3 offset))
             {
-                // Wrap
-                float3 pos = transform.position;
-                pos.x += WorldGen.WrapDistance() * -math.sign(distance);
-                transform.position = pos;
+                transform.position += (Vector3)offset;
             }
         }
 

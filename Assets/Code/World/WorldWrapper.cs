@@ -56,7 +56,8 @@ namespace Defender
                 {
                     copy.transform.SetParent(chunk.transform, false);
                     copy.transform.localPosition = float3.zero;
-                    copy.transform.localScale = new float3(chunk_width, 1f, copy.transform.localScale.z);
+                    // Using an unity plane, its 10x10
+                    copy.transform.localScale = new float3(chunk_width * .1f, 1f, copy.transform.localScale.z);
                 }
 
                 // Could make the chunk data static, but in order to keep them reusable I'll leave as is.
@@ -66,6 +67,22 @@ namespace Defender
                     half_size = half,
                 });
             }
+        }
+
+        public static bool IsOutOfBounds(float3 point, out float3 offset)
+        {
+            offset = float3.zero;
+
+            float distance = point.x - Player.I.transform.position.x;
+
+            if (WorldGen.offset.x < math.abs(distance))
+            {
+                // Wrap
+                offset.x = WorldGen.WrapDistance() * -math.sign(distance);
+                return true;
+            }
+
+            return false;
         }
     }
 }

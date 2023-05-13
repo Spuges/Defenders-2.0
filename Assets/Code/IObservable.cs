@@ -21,4 +21,9 @@ public class Observable<T> : IObservable<T>
     {
         action_event -= callback;
     }
+
+    public void Clear()
+    {
+        action_event = null;
+    }
 }

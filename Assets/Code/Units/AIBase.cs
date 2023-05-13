@@ -6,5 +6,9 @@ namespace Defender
 {
     public class AIBase : MonoBehaviour
     {
+        public virtual void OnEnable()
+        {
+
+        }
     }
 }

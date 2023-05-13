@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 namespace Defender
 {
@@ -14,19 +15,34 @@ namespace Defender
         [SerializeField] private List<WinCondition> Conditions = new List<WinCondition>();
         [SerializeField] private List<Spawner> spawners = new List<Spawner>();
 
-        public LevelBase Initialise()
+        public LevelBase Initialise(float difficulty_modifier = 1f)
         {
             LevelBase instance = Instantiate(this);
 
-            Conditions = Conditions.InstantiateList();
+            // If we're at last level.. Which should be a bonus level, scale that attribute and everything should scale progressively. Hoping
+            difficulty_level *= difficulty_modifier;
+
+            foreach (var spawn in instance.spawners)
+                spawn.Initialise();
+
+            instance.Conditions = Conditions.InstantiateList();
 
             return instance;
         }
 
         public bool HasWon() => Conditions.TrueForAll(o => o.CheckWon());
 
+        public void Update()
+        {
+            foreach(Spawner spawn in spawners)
+            {
+                if (spawn.CanSpawn())
+                    spawn.Spawn();
+            }
+        }
+
         [Serializable]
-        public struct Spawner
+        public class Spawner
         {
             [SerializeField] int max_unit_count;
             [SerializeField] int spawn_after_kills;
@@ -50,7 +66,15 @@ namespace Defender
                 {
                     // Position?!?!
                     alive_units.Add(enemy);
-                    next_spawn = Time.timeSinceLevelLoad + UnityEngine.Random.Range(spawn_interval.x, spawn_interval.y);
+
+                    float rng_x = Random.Range(-WorldGen.offset.x, WorldGen.offset.x);
+                    float rng_y = Random.Range(GameRules.I.PlayerHeightBounds.x, GameRules.I.PlayerHeightBounds.y);
+
+                    enemy.transform.position = new float3(rng_x, rng_y, 0f);
+
+                    next_spawn = Time.timeSinceLevelLoad + Random.Range(spawn_interval.x, spawn_interval.y);
+
+                    GameManager.Spawn(new Spacecraft.Spawn { space_craft = enemy });
                 }
                 else
                 {
@@ -61,9 +85,7 @@ namespace Defender
             public void Initialise()
             {
                 alive_units = new ();
-
-                if (spawn_after_kills > 0)
-                    GameManager.I.onDeathEvent.Subscribe(OnDeath);
+                GameManager.I.onDeathEvent.Subscribe(OnDeath);
             }
 
             void OnDeath(Spacecraft.Death death)
