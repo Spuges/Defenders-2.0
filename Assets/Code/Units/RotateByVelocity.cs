@@ -11,7 +11,8 @@ namespace Defender
          
         private void LateUpdate()
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigid.velocity, Vector3.up), rotation_speed * Time.deltaTime);
+            if(rigid.velocity.sqrMagnitude > 0.01f)
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigid.velocity, Vector3.up), rotation_speed * Time.deltaTime);
         }
     }
 }
