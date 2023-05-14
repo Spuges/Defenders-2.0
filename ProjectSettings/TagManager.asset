@@ -8,13 +8,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - ai
+  - buildings
+  - projectile
+  - radar
   - 
   - 
   - 
