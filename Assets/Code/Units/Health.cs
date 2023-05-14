@@ -1,24 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Defender
 {
 
-    public class Health : MonoBehaviour, IHealth, IObservable<Damage>
+    public class Health : MonoBehaviour, IHealth, IObservable<Health.Changed>
     {
+        public struct Changed
+        {
+            public Damage source;
+            public Health taker;
+        }
+
         [SerializeField] private float max_health;
         private float current_health;
 
-        private event System.Action<Damage> on_damage;
+        private event Action<Changed> onChanged;
 
         public float health => current_health;
 
         [SerializeField] private List<GameObject> spawn_on_death = new List<GameObject>();
 
+        public float NormalizedHealth() => current_health / max_health;
+
         public void Restore()
         {
             current_health = max_health;
+            onChanged?.Invoke(new Changed() { source = null, taker = this });
         }
 
         private void OnDisable()
@@ -31,10 +41,11 @@ namespace Defender
             if(GetComponent<AIBase>())
             {
                 current_health = max_health * GameManager.I.GetDifficulty();
+                onChanged?.Invoke(new Changed() { source = null, taker = this });
             }
             else
             {
-                current_health = max_health;
+                Restore();
             }
 
             GameManager.I.onLevelChanged.Subscribe((level) => Restore());
@@ -43,7 +54,7 @@ namespace Defender
         public void Damage(Damage source, float damage)
         {
             current_health -= damage;
-            on_damage?.Invoke(source);
+            onChanged?.Invoke(new Changed() { source = source, taker = this });
 
             if (0 < current_health)
                 return;
@@ -66,14 +77,14 @@ namespace Defender
             gameObject.SetActive(false);
         }
 
-        public void Subscribe(System.Action<Damage> callback)
+        public void Subscribe(Action<Changed> callback)
         {
-            on_damage += callback;
+            onChanged += callback;
         }
 
-        public void Unsubscribe(System.Action<Damage> callback)
+        public void Unsubscribe(Action<Changed> callback)
         {
-            on_damage += callback;
+            onChanged += callback;
         }
     }
 }

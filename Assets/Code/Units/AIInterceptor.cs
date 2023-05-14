@@ -65,9 +65,9 @@ namespace Defender
 
             bounds = GameRules.I.BoundsY;
 
-            GetComponent<Health>()?.Subscribe((dmg) => 
+            GetComponent<Health>()?.Subscribe((changed) => 
             {
-                if (dmg.GetComponent<Player>()) // Null safe check
+                if (changed.source?.GetComponent<Player>()) // Null safe check
                     follow_target = player.spacecraft;
             });
         }

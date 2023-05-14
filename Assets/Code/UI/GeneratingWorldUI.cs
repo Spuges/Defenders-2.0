@@ -9,6 +9,9 @@ namespace Defender
     {
         [SerializeField] TextMeshProUGUI progress_text;
 
+        [SerializeField] GameObject Menu;
+        [SerializeField] GameObject GameUI;
+
         private WorldGen m_gen;
         private Animator m_animator;
 

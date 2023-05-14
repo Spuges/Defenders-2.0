@@ -19,7 +19,21 @@ namespace Defender
             Fade = GetComponent<MenuFade>();
 
             GameManager.I.onGameOver += () => gameObject.SetActive(true);
-            Inputs.I.onEscape.Subscribe(() => gameObject.SetActive(true));
+            Inputs.I.onEscape.Subscribe(() =>
+            {
+                if (!GameManager.I.GameOver())
+                {
+                    if (!gameObject.activeInHierarchy)
+                    {
+                        gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        Fade.FadeOut();
+                        Time.timeScale = 1f;
+                    }
+                }
+            });
 
             startBtn.onClick.AddListener(() =>
             {
