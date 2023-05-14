@@ -6,7 +6,7 @@ namespace Defender
 {
     public interface IHealth
     {
-        public float Health { get; }
+        public float health { get; }
         public void Damage(Damage source, float damage);
     }
 }

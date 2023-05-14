@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using System;
+using Unity.Mathematics;
 
 namespace Defender
 {
@@ -11,27 +10,26 @@ namespace Defender
     {
         public static Inputs I { get; private set; }
 
-        public InputActionAsset input_values;
+        public Observable           onEscape = new();
 
-        //public InputAction move_action;
-        //public InputAction fire_action; // This does not trigger, better to use the Asset :\
+        public Observable<float2>   onMove = new();
+        public Observable           onFire = new();
 
         private void Awake()
         {
             I = this;
         }
 
-        //// Alternatative way of enabling / disabling user inputs o_O
-        //private void OnEnable()
-        //{
-        //    //move_action.Enable();
-        //    //fire_action.Enable();
-        //}
+        private void Update()
+        {
+            float2 move_raw = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            onMove?.Invoke(move_raw);
 
-        //private void OnDisable()
-        //{
-        //    //move_action.Disable();
-        //    //fire_action.Disable();
-        //}
+            if(Input.GetKey(KeyCode.Mouse0))
+                onFire?.Invoke();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+                onEscape?.Invoke();
+        }
     }
 }

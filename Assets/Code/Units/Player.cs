@@ -1,49 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Unity.Mathematics;
 using System;
 
 namespace Defender
 {
-    [RequireComponent(typeof(Spacecraft))]
+    [RequireComponent(typeof(PlayerCraft))]
     [RequireComponent(typeof(ShipAbilities))]
+    [RequireComponent(typeof(Health))]
     public class Player : MonoBehaviour
     {
+        public static Observable OnDeath = new Observable();
+
         public static Player I { get; private set; }
 
-        public Spacecraft GetCraft => m_spacecraft;
-        private Spacecraft m_spacecraft;
-        private ShipAbilities m_abilities;
+        public PlayerCraft spacecraft { get; private set; }
+        public ShipAbilities abilities { get; private set; }
+
+        public Health hp { get; private set; }
+
+        public int current_lives { get; private set; }
 
         // (InputSystem) Doesn't detect my mouse, weird.. Will try to build if it is just an editor bug
         // AHA! It was the simulator. In game view it works just fine :D
-        private InputAction m_move;
-        private InputAction m_fire;
+        // Removed InputSystem as it bugged out completely... I've come to a conclusion that it is a big
+        // pile of garboogle.
 
         private void Awake()
         {
             I = this;
-            m_spacecraft = GetComponent<Spacecraft>();
-            m_abilities = GetComponent<ShipAbilities>();
+            spacecraft = GetComponent<PlayerCraft>();
+            abilities = GetComponent<ShipAbilities>();
+            hp = GetComponent<Health>();
 
-            m_move = Inputs.I.input_values.FindAction("Move");
-            m_move.Enable();
-
-            m_fire = Inputs.I.input_values.FindAction("Fire");
-            m_fire.Enable();
+            Inputs.I.onMove.Subscribe(spacecraft.SetMoveVector);
+            Inputs.I.onFire.Subscribe(abilities.TryAndUse);
+            Inputs.I.onMove.Invoke(transform.forward.f2());
         }
 
-        private void Update()
-        {
-            m_spacecraft.SetMoveVector(m_move.ReadValue<Vector2>());
-            bool fire = 0 < m_fire.ReadValue<float>();
+        public void DeductLife() => current_lives--;
+        public void RestoreLives() => current_lives = 3;
 
-            if(fire)
-            {
-                m_abilities?.TryAndUse();
-            }
+
+        private void OnDisable()
+        {
+            OnDeath?.Invoke();
+            GameManager.I.PlayerDeath();
         }
 
 #if UNITY_EDITOR
@@ -60,7 +63,7 @@ namespace Defender
                 {
                     ShootAbility shoot = selection as ShootAbility;
                     Gizmos.color = Color.red;
-                    Gizmos.DrawWireSphere(transform.position + shoot.Offset, 0.2f);
+                    Gizmos.DrawWireSphere(transform.TransformPoint(shoot.Offset), 0.2f);
                 }
             }
         }

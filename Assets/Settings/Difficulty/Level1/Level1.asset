@@ -13,18 +13,19 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   difficulty_level: 1
-  Conditions:
-  - {fileID: 11400000, guid: fe9dd0cc89aafc74d9ce4087c3638066, type: 2}
   spawners:
   - max_unit_count: 15
     spawn_after_kills: 0
     spawn_interval:
-      x: 2
-      y: 4
-    enemy_unity: {fileID: 7765863080781848176, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+      x: 1.5
+      y: 3
+    score_on_kill: 10
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
   - max_unit_count: 15
     spawn_after_kills: 0
     spawn_interval:
-      x: 0.5
-      y: 1
-    enemy_unity: {fileID: 7765863080781848176, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+      x: 1.5
+      y: 3
+    score_on_kill: 10
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+  score_requirement: 200

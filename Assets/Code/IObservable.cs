@@ -27,3 +27,25 @@ public class Observable<T> : IObservable<T>
         action_event = null;
     }
 }
+
+public class Observable
+{
+    private event Action action_event;
+
+    public void Invoke() => action_event?.Invoke();
+
+    public void Subscribe(Action callback)
+    {
+        action_event += callback;
+    }
+
+    public void Unsubscribe(Action callback)
+    {
+        action_event -= callback;
+    }
+
+    public void Clear()
+    {
+        action_event = null;
+    }
+}

@@ -56,6 +56,7 @@ namespace Defender
             if(!GetPoolable(component.gameObject, out obj))
             {
                 obj = Object.Instantiate(component).GetComponent<T>();
+
                 Poolable pool = obj.GetComponent<Poolable>();
 
                 if (pool == null)

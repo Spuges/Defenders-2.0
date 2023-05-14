@@ -73,7 +73,13 @@ namespace Defender
         {
             offset = float3.zero;
 
-            float distance = point.x - Player.I.transform.position.x;
+            float3 pos;
+            if (Player.I)
+                pos = Player.I.transform.position.f3();
+            else
+                pos = Camera.main.transform.position.f3();
+
+            float distance = point.x - pos.x;
 
             if (WorldGen.offset.x < math.abs(distance))
             {

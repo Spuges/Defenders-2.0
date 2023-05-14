@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Linq;
 
 namespace Defender
@@ -14,26 +13,22 @@ namespace Defender
         List<IShipAbility> abilities; 
         private IActiveAbility selected;
 
-        private void Start()
+        private void OnEnable()
         {
-
             abilities = new List<IShipAbility>(start_abilities.Count);
-
             start_abilities.ForEach(o => abilities.Add(o.CopyAbility(gameObject)));
             selected = (IActiveAbility)abilities.FirstOrDefault(o => o is IActiveAbility);
         }
 
         public void TryAndUse()
         {
+            if (!gameObject.activeSelf)
+                return;
+
             if(selected != null && selected.CanActivate())
             {
                 selected.Activate();
             }
-        }
-
-        private void Update()
-        {
-            // Do something fancy
         }
     }
 }

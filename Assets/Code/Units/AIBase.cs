@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 namespace Defender
 {
-    public class AIBase : MonoBehaviour
+    public class AIBase : MonoBehaviour, ISpaceCraft
     {
-        public virtual void OnEnable()
-        {
+        GameObject ISpaceCraft.GameObject => gameObject;
 
-        }
+        Transform ISpaceCraft.Transform => transform;
     }
 }

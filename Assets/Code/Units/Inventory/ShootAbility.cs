@@ -19,6 +19,7 @@ namespace Defender
 
         private Collider m_collider;
         private IVelocity m_velocity;
+        private IShootDir m_target;
         private Transform m_transform;
 
         private float next_fire = 0f;
@@ -37,8 +38,11 @@ namespace Defender
         protected override void Initialise()
         {
             m_transform = owner.GetComponent<Transform>();  // To get the rotation
+            m_target = owner.GetComponent<IShootDir>();
             m_velocity = owner.GetComponent<IVelocity>();   // Add velocity for projectiles depending on the flight speed
             m_collider = owner.GetComponent<Collider>();    // Ignore collision
+
+            //Debug.Log($"Initialise {nameof(ShootAbility)} for {owner.name} - velocity component: {m_velocity == null}");
         }
 
         public bool CanFire()
@@ -59,8 +63,12 @@ namespace Defender
 
             if (projectile.Copy(out Damage dmg))
             {
+                dmg.owner = owner;
                 dmg.amount = damage; // Override the old damage
                 new_projectile = dmg.gameObject;
+
+                if (m_collider != null)
+                    dmg.SetIgnoreCollision(m_collider, new_projectile.GetComponent<Collider>());
             }
             else
             {
@@ -68,15 +76,14 @@ namespace Defender
             }
 
             // Initial position
-            new_projectile.transform.position = (float3)m_transform.position + offset;
+            new_projectile.transform.position = m_transform.TransformPoint(offset);
 
-            // Add projectile start velocity
-            float3 dir = math.normalize(new float3(m_transform.forward.x, 0, 0));
-            offset *= dir;
-            float3 projectile_velocity = dir * start_velocity;
+            float2 dir = m_target.get_direction(start_velocity);
+
+            float2 projectile_velocity = dir * start_velocity;
 
             Rigidbody rigid = new_projectile.GetComponent<Rigidbody>();
-            rigid.velocity = projectile_velocity;
+            rigid.velocity = new float3(projectile_velocity, 0f);
 
             // Add inherited velocity
             if (m_velocity != null && inherit_velocity)
@@ -85,15 +92,9 @@ namespace Defender
             }
 
             // Ignore origin - collision
-            if (m_collider != null)
-                Physics.IgnoreCollision(m_collider, new_projectile.GetComponent<Collider>());
 
-            // TODO
-            // Get lifetime component of projectile and set the duration
             Lifetime life = new_projectile.GetComponent<Lifetime>() ?? new_projectile.AddComponent<Lifetime>();
             life.Setup(life_time);
-
-            // Get the damage component of projectile and set it up
         }
     }
 }

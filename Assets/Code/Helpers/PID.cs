@@ -111,32 +111,5 @@ namespace Defender
             return present * pFactor + integral * iFactor + deriv * dFactor;
         }
     }
-
-    [Serializable]
-    public class PIDV3Clamped
-    {
-        public float pFactor, iFactor, dFactor;
-        float3 integral = 0;
-        float3 lastError = 0;
-
-        public PIDV3Clamped(float pFactor, float iFactor, float dFactor)
-        {
-            this.pFactor = pFactor;
-            this.iFactor = iFactor;
-            this.dFactor = dFactor;
-        }
-
-        public float3 Update(float3 setpoint, float3 actual, float timeFrame, float max)
-        {
-            float3 present = setpoint - actual;
-            integral += present * timeFrame;
-            float3 deriv = (present - lastError) / timeFrame;
-            max *= timeFrame;
-            deriv = math.clamp(deriv, -max, max);
-
-            lastError = present;
-            return present * pFactor + integral * iFactor + deriv * dFactor;
-        }
-    }
 }
 

@@ -7,14 +7,35 @@ namespace Defender
 {
     public class Damage : MonoBehaviour
     {
+        public GameObject owner { get; set; }
+
         public float amount;
+
         [SerializeField] List<GameObject> spawn_on_damage;
 
         private bool is_projectile = true;
 
+        private Collider my_collider;
+        private Collider source_collider;
+
         private void Awake()
         {
             is_projectile = GetComponent<IHealth>() == null;
+        }
+
+        private void OnDisable()
+        {
+            if(my_collider && source_collider)
+            {
+                Physics.IgnoreCollision(my_collider, source_collider, false);
+            }
+        }
+
+        public void SetIgnoreCollision(Collider source_col, Collider my_col)
+        {
+            my_collider = my_col;
+            source_collider = source_col;
+            Physics.IgnoreCollision(my_collider, source_collider);
         }
 
         private void OnCollisionEnter(Collision collision)

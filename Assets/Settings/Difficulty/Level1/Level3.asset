@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e486cfb67c5df204db175a9b5b8ba591, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: 
+  difficulty_level: 1.4
+  spawners:
+  - max_unit_count: 15
+    spawn_after_kills: 0
+    spawn_interval:
+      x: 1.5
+      y: 3
+    score_on_kill: 20
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+  - max_unit_count: 15
+    spawn_after_kills: 0
+    spawn_interval:
+      x: 1.5
+      y: 3
+    score_on_kill: 20
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+  - max_unit_count: 15
+    spawn_after_kills: 0
+    spawn_interval:
+      x: 1.5
+      y: 3
+    score_on_kill: 20
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+  - max_unit_count: 15
+    spawn_after_kills: 0
+    spawn_interval:
+      x: 1.5
+      y: 3
+    score_on_kill: 20
+    enemy_unity: {fileID: 6277189772470853713, guid: e7971680eea572f4fbbbaf21ba187aa4, type: 3}
+  score_requirement: 600

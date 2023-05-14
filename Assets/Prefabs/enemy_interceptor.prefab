@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3307228649921137463}
   - component: {fileID: 1913079909649859485}
   - component: {fileID: 6277189772470853713}
-  - component: {fileID: 7765863080781848176}
   - component: {fileID: 7765863080781848177}
   - component: {fileID: 3588939875497004646}
+  - component: {fileID: 722702407836071743}
   - component: {fileID: 909690571684810079}
   - component: {fileID: 7206861464377211042}
   m_Layer: 6
@@ -73,40 +73,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9395463b66a361548b97fc6dd911f21d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  group_distance: 15
-  intercept_distance: 10
-  follow_distance: 3
-  passive_velocity: 5
-  max_velocity: 15
+  intercept_dist: 10
+  intercept_vary: 4
+  passive_velocity: 45
+  max_velocity: 60
   accelerate_pid:
     pFactor: 0.1
     iFactor: 0
     dFactor: 0
-  state_update_interval: 0.1
+  fire_spread: 6
   avoid_layer:
     serializedVersion: 2
-    m_Bits: 456
-  avoid_distance: 6
---- !u!114 &7765863080781848176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2787290855222481293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e2570426a846042bbcca2898b88e03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensitivity:
-    x: 20
-    y: 5
-  acceleration_pid:
-    pFactor: 0.035
-    iFactor: 0
-    dFactor: 0
-  base_max_health: 4
+    m_Bits: 328
+  avoid_distance: 8
+  orientation_body: {fileID: 3675855932407949890}
+  fire_distance: 40
 --- !u!114 &7765863080781848177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +116,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.63
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &722702407836071743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2787290855222481293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12b191d6ed95f54a9a2a6bb504f5bc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  max_health: 2
+  spawn_on_death:
+  - {fileID: 8837852266193468709, guid: cb5af651fe9725940aa405c1daa4ae99, type: 3}
+  - {fileID: 5111436745313142163, guid: d10fcb48d017ff2468ce6139d25a7598, type: 3}
 --- !u!114 &909690571684810079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd3a7d171cfc09047898c5e5cf00b286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 3
+  amount: 1
   spawn_on_damage:
   - {fileID: 1552214960897538081, guid: 8393d4416bb5cef4786e35cb3e0ca95f, type: 3}
   - {fileID: 4731620759126875048, guid: f820e115001dab948a61726b1aa54b1f, type: 3}
