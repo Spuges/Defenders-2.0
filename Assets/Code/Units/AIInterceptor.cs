@@ -72,12 +72,25 @@ namespace Defender
             });
         }
 
+        void OnPlayerSpawned(Player player)
+        {
+            StopAllCoroutines();
+            StartCoroutine(EngageCheck());
+        }
+
         public void OnEnable()
         {
+            GameManager.I.onPlayerSpawned.Subscribe(OnPlayerSpawned);
+
             spawn_age = Time.timeSinceLevelLoad;
             follow_target = null;
 
             StartCoroutine(EngageCheck());
+        }
+
+        private void OnDisable()
+        {
+            GameManager.I.onPlayerSpawned.Unsubscribe(OnPlayerSpawned);
         }
 
         private IEnumerator EngageCheck()

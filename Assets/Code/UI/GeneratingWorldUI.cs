@@ -7,10 +7,14 @@ namespace Defender
 {
     public class GeneratingWorldUI : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI progress_text;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void Initialize()
+        {
+            // Make sure the object is always on at start.
+            FindObjectOfType<GeneratingWorldUI>(true).gameObject.SetActive(true);
+        }
 
-        [SerializeField] GameObject Menu;
-        [SerializeField] GameObject GameUI;
+        [SerializeField] TextMeshProUGUI progress_text;
 
         private WorldGen m_gen;
         private Animator m_animator;
