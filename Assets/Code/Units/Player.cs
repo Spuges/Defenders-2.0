@@ -21,12 +21,12 @@ namespace Defender
         public Health hp { get; private set; }
 
         public int current_lives { get; private set; }
+        [SerializeField] private int max_lives = 3;
 
         // (InputSystem) Doesn't detect my mouse, weird.. Will try to build if it is just an editor bug
         // AHA! It was the simulator. In game view it works just fine :D
         // Removed InputSystem as it bugged out completely... I've come to a conclusion that it is a big
         // pile of garboogle.
-
         private void Awake()
         {
             I = this;
@@ -40,7 +40,7 @@ namespace Defender
         }
 
         public void DeductLife() => current_lives--;
-        public void RestoreLives() => current_lives = 3;
+        public void RestoreLives() => current_lives = max_lives;
 
 
         private void OnDisable()

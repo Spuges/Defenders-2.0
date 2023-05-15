@@ -25,7 +25,7 @@ namespace Defender
             if (!gameObject.activeSelf)
                 return;
 
-            if(selected != null && selected.CanActivate())
+            if(selected != null && selected.CanActivate() && 0f < Time.timeScale)
             {
                 selected.Activate();
             }

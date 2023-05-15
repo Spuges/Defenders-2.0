@@ -49,7 +49,7 @@ namespace Defender
         {
             float3 target_point = new float3(target_last_pos.x, 0f, 0f) + camera_offset;
             transform.position += (Vector3)follow_pid.Update(target_point, transform.position, Time.fixedDeltaTime);
-            float rotation = (transform.position.x / (WorldGen.WrapDistance() / 360f) % 360f);
+            float rotation = (transform.position.x / 2f * (WorldGen.WrapDistance() / 360f) % 360f);
             skybox_material.SetFloat("_Rotation", rotation);
         }
 

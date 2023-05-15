@@ -8,7 +8,9 @@ namespace Defender
     [RequireComponent(typeof(Animator))]
     public class LevelUI : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI level_txt;
+        [SerializeField] TextMeshProUGUI static_level_txt;
+        [SerializeField] TextMeshProUGUI splash_level_txt;
+
         private Animator animator;
 
         private void Awake()
@@ -20,7 +22,11 @@ namespace Defender
 
         void OnLevelChanged(int level)
         {
-            level_txt.text = $"Level {level+1}";
+            string text = $"Level {level + 1}";
+
+            static_level_txt.text = text;
+            splash_level_txt.text = text;
+
             gameObject.SetActive(true);
         }
 

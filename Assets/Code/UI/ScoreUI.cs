@@ -18,7 +18,7 @@ namespace Defender
         private float m_current = 0;
         private int m_desired = 0;
 
-        private float m_current_fill = 0f;
+        private float m_desired_fill = 0f;
 
         private void Awake()
         {
@@ -43,9 +43,9 @@ namespace Defender
                 score_txt.text = ((int)math.round(m_current)).ToString();
             }
 
-            if(0f < math.abs(m_current_fill - level_fill_img.fillAmount))
+            if(0f < math.abs(m_desired_fill - level_fill_img.fillAmount))
             {
-                level_fill_img.fillAmount += fill_pid.Update(m_current_fill, level_fill_img.fillAmount, Time.unscaledDeltaTime);
+                level_fill_img.fillAmount += fill_pid.Update(m_desired_fill, level_fill_img.fillAmount, Time.unscaledDeltaTime);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Defender
         {
             if(!GameManager.I.GameOver())
             {
-                m_current_fill = GameManager.I.LevelProgress();
+                m_desired_fill = GameManager.I.LevelProgress();
                 m_desired = score;
             }
         }
@@ -62,7 +62,7 @@ namespace Defender
         {
             if (!GameManager.I.GameOver())
             {
-                m_current_fill = 0f;
+                m_desired_fill = 0f;
                 level_fill_img.fillAmount = 0f;
             }
         }

@@ -65,19 +65,32 @@ namespace Defender
 
             bounds = GameRules.I.BoundsY;
 
-            GetComponent<Health>()?.Subscribe((dmg) => 
+            GetComponent<Health>()?.Subscribe((changed) => 
             {
-                if (dmg.GetComponent<Player>()) // Null safe check
+                if (changed.source?.GetComponent<Player>()) // Null safe check
                     follow_target = player.spacecraft;
             });
         }
 
+        void OnPlayerSpawned(Player player)
+        {
+            StopAllCoroutines();
+            StartCoroutine(EngageCheck());
+        }
+
         public void OnEnable()
         {
+            GameManager.I.onPlayerSpawned.Subscribe(OnPlayerSpawned);
+
             spawn_age = Time.timeSinceLevelLoad;
             follow_target = null;
 
             StartCoroutine(EngageCheck());
+        }
+
+        private void OnDisable()
+        {
+            GameManager.I.onPlayerSpawned.Unsubscribe(OnPlayerSpawned);
         }
 
         private IEnumerator EngageCheck()

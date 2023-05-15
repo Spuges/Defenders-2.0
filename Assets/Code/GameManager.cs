@@ -24,6 +24,7 @@ namespace Defender
         public Observable<int> onLevelChanged = new();
         public Observable<ISpaceCraft.Death> onDeathEvent = new();
         public Observable<ISpaceCraft.Spawn> onSpawnEvent = new();
+        public Observable<Player> onPlayerSpawned = new();
 
         public int Score { get; private set; }
 
@@ -60,7 +61,7 @@ namespace Defender
             onDeathEvent.Clear();
             ClearLevel();
 
-            StartCoroutine(SpawnPlayer());
+            StartCoroutine(SpawnPlayer(true));
 
             StartLevel();
             onLevelChanged.Invoke(current_level);
@@ -83,7 +84,7 @@ namespace Defender
 
         public void ClearLevel()
         {
-            List<AIBase> ais = new List<AIBase>(FindObjectsOfType<AIBase>());
+            List<AIBase> ais = new List<AIBase>(FindObjectsOfType<AIBase>(false));
 
             foreach (var ai in ais)
             {
@@ -125,6 +126,8 @@ namespace Defender
                 player.RestoreLives();
             else
                 player.DeductLife();
+
+            onPlayerSpawned?.Invoke(player);
         }
 
         public void NextLevel()
