@@ -2,8 +2,8 @@
 
 Defualt inputs
 
-Fire = [L-Mouse] or [Space]
-Movement = [WASD] or [Arrow Keys]
-Menu = [Escape]
+Fire = [L-Mouse] or [Space]<br />
+Movement = [WASD] or [Arrow Keys]<br />
+Menu = [Escape]<br />
 
 I'm at it again. Will make it better.
