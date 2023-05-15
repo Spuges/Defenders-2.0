@@ -88,18 +88,22 @@ namespace Defender
                 
                 if(enemy_unity.Copy(out enemy))
                 {
-                    // Position?!?!
                     alive_units.Add(enemy);
 
-                    float rng_dir = Random.Range(-1f, 1f);
+                    float rng_dir = math.sign(Random.Range(-1f, 1f));
 
-                    float rng_x = rng_dir * Random.Range(WorldGen.offset.x * .25f, WorldGen.offset.x * .75f);
+                    float rng_x = rng_dir * Random.Range(WorldGen.offset.x * .2f, WorldGen.offset.x * 1f);
                     float rng_y = Random.Range(GameRules.I.BoundsY.x, GameRules.I.BoundsY.y);
 
-                    if(Player.I)
-                        rng_x += Player.I.transform.position.x;
+                    if (Player.I)
+                        rng_x = Player.I.transform.position.x + rng_x;
+                    else
+                        rng_x = Camera.main.transform.position.x + rng_x;
 
                     enemy.transform.position = new float3(rng_x, rng_y, 0f);
+
+                    Debug.DrawRay(enemy.transform.position, Vector3.up, Color.red, 1f);
+                    //Debug.Break();
 
                     next_spawn = Time.timeSinceLevelLoad + Random.Range(spawn_interval.x, spawn_interval.y);
 

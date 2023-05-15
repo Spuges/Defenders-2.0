@@ -84,7 +84,7 @@ namespace Defender
 
         public void ClearLevel()
         {
-            List<AIBase> ais = new List<AIBase>(FindObjectsOfType<AIBase>());
+            List<AIBase> ais = new List<AIBase>(FindObjectsOfType<AIBase>(false));
 
             foreach (var ai in ais)
             {
