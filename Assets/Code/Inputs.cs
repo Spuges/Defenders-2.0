@@ -25,7 +25,7 @@ namespace Defender
             float2 move_raw = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             onMove?.Invoke(move_raw);
 
-            if(Input.GetKey(KeyCode.Mouse0))
+            if(0f < Input.GetAxis("Fire"))
                 onFire?.Invoke();
 
             if (Input.GetKeyDown(KeyCode.Escape))
