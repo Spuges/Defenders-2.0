@@ -27,6 +27,7 @@ namespace Defender
         public Observable<Player> onPlayerSpawned = new();
 
         public int Score { get; private set; }
+        public int Level => current_level;
 
         public static void Death(ISpaceCraft.Death death)
         {
@@ -58,6 +59,10 @@ namespace Defender
         public void NewGame()
         {
             current_level = 0;
+            Score = 0;
+
+            onScoreChanged?.Invoke(Score);
+
             onDeathEvent.Clear();
             ClearLevel();
 

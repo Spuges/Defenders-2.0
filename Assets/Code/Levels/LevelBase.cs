@@ -73,6 +73,7 @@ namespace Defender
             [SerializeField] AIBase enemy_unity;
             private List<ISpaceCraft> alive_units;
             private LevelBase level;
+            private int m_level;
 
             public int GetAliveCount() => alive_units.Count;
 
@@ -118,8 +119,10 @@ namespace Defender
             public void Initialise(LevelBase level)
             {
                 this.level = level;
+                m_level = GameManager.I.Level;
                 alive_units = new ();
                 GameManager.I.onDeathEvent.Subscribe(OnDeath);
+                GameManager.I.onLevelChanged.Subscribe(OnLevelChanged);
             }
 
             void OnDeath(ISpaceCraft.Death death)
@@ -132,6 +135,16 @@ namespace Defender
                         GameManager.I.AddScore((int)math.round(score_on_kill * level.difficulty_level));
                         //Debug.Log("Removed enemy from my alive list");
                     }
+                }
+            }
+
+            // Downside of observables, keeping track of subcriptions will become a mess.
+            void OnLevelChanged(int level)
+            {
+                if(level != m_level)
+                {
+                    GameManager.I.onDeathEvent.Unsubscribe(OnDeath);
+                    GameManager.I.onLevelChanged.Unsubscribe(OnLevelChanged);
                 }
             }
         }
