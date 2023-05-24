@@ -4,12 +4,13 @@
 #
 /[Ll]ibrary/
 /[Tt]emp/
-/[Oo]Obj/*
+/[Oo]bj/*
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+# This seems to work with union with *.obj files, annoying.
 !*.obj
 !*.obj.meta
 
