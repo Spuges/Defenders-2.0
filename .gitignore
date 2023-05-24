@@ -4,15 +4,18 @@
 #
 /[Ll]ibrary/
 /[Tt]emp/
-[Oo]bj/
+/[Oo]Obj/*
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+!*.obj
+!*.obj.meta
+
 #always include Wavefront objects inside assets
-!/Assets/Imports/*.obj
-!/Assets/Imports/Buildings/*.obj
+#!/Assets/Imports/*.obj
+#!/Assets/Imports/Buildings/*.obj
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
